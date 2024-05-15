@@ -14,11 +14,11 @@ This API allows users to manage their tasks efficiently. Users can create, updat
 - [Contributing](#contributing)
 - [License](#license)
 
-## Project Description 📋
+## Project Description 
 
 The Task Management API is a RESTful API that allows users to manage their tasks. Each user can perform CRUD (Create, Read, Update, Delete) operations on their tasks. The API is secured using JWT (JSON Web Tokens) for authentication.
 
-## Features ✨
+## Features 
 
 - User authentication (register and login)
 - Create, update, fetch, and delete tasks
@@ -26,7 +26,7 @@ The Task Management API is a RESTful API that allows users to manage their tasks
 - Input validation using express-validator
 - Error handling middleware
 
-## Installation 🛠️
+## Installation 
 
 ### Prerequisites
 
@@ -71,7 +71,7 @@ The Task Management API is a RESTful API that allows users to manage their tasks
 
     The server should now be running on `http://localhost:3000`.
 
-## Usage 📚
+## Usage 
 
 ### Register a User
 
@@ -161,7 +161,7 @@ DELETE /task/:id
 Authorization: Bearer <your_jwt_token>
 ```
 
-## Environment Variables 🌍
+## Environment Variables
 
 Make sure to configure the following environment variables in your `.env` file:
 
@@ -170,7 +170,7 @@ Make sure to configure the following environment variables in your `.env` file:
 - `PORT`: The port on which the server will run (default is 3000)
 
 
-## API Endpoints 🔗
+## API Endpoints
 
 - `POST /auth/register`: Register a new user
 - `POST /auth/login`: Login a user and get a JWT token

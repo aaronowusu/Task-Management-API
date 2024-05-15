@@ -116,11 +116,6 @@ Authorization: Bearer <your_jwt_token>
 ### Get all Tasks
 
 ```http
-
-markdown
-Copy code
-## Create a Task
-
 POST /task
 Content-Type: application/json
 Authorization: Bearer <your_jwt_token>
@@ -138,6 +133,7 @@ Authorization: Bearer <your_jwt_token>
 ```http
 GET /task
 Authorization: Bearer <your_jwt_token>
+
 ```
 
 ### Update a Task
@@ -145,13 +141,14 @@ Authorization: Bearer <your_jwt_token>
 ```http
 PATCH /task/:id
 Content-Type: application/json
-Authorization : Bearer <your_jwt_token>
+Authorization: Bearer <your_jwt_token>
 
 {
 "title": "Complete project",
 "description": "Finish the task management project by the end of the month.",
 "status": "Completed",
 }
+
 ```
 
 ### Delete a Task

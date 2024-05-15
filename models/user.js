@@ -1,7 +1,17 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const Schema = mongoose.Schema;
 
-const UserSchema = new mongoose.Schema({
+const taskSchema = new Schema(
+  {
+    taskId: { type: Schema.Types.ObjectId, ref: "Task" },
+    title: { type: String },
+    description: { type: String },
+  },
+  { _id: false },
+);
+
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -15,19 +25,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tasks: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task',
-    },
-  ],
+  tasks: [taskSchema],
 });
 
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     next();
   }
   this.password = await bcrypt.hash(this.password, 12);
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

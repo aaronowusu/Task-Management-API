@@ -1,7 +1,8 @@
-const Task = require('../models/task');
-const { validationResult } = require('express-validator');
+const Task = require("../models/task");
+const { validationResult } = require("express-validator");
+const User = require("../models/user");
 
-exports.createTask = async (req, res,next) => {
+exports.createTask = async (req, res, next) => {
   const { title, description, status, dueDate } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -9,22 +10,30 @@ exports.createTask = async (req, res,next) => {
   }
   try {
     const newTask = new Task({
-        title,
-        description,
-        status,
-        dueDate,
-        user: req.user.id,
-     
+      title,
+      description,
+      status,
+      dueDate,
+      user: req.user.id,
     });
     await newTask.save();
 
+    // Add the task to the user's tasks array
+    const user = await User.findById(req.user.id);
+    user.tasks.push({
+      taskId: newTask._id,
+      title: newTask.title,
+      description: newTask.description,
+    });
+    await user.save();
+
     const populatedTask = await Task.findById(newTask._id).populate(
-      'user',
-      'name email'
+      "user",
+      "name email",
     );
 
     const response = {
-      message: 'Task created successfully!',
+      message: "Task created successfully!",
       task: {
         taskId: populatedTask._id,
         title: populatedTask.title,
@@ -42,13 +51,13 @@ exports.createTask = async (req, res,next) => {
     return res.status(201).json(response);
   } catch (err) {
     if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-exports.getTasks = async (req, res,next) => {
+exports.getTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find({ user: req.user.id }).sort({
       createdAt: -1,
@@ -56,13 +65,13 @@ exports.getTasks = async (req, res,next) => {
     return res.status(200).json(tasks);
   } catch (err) {
     if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-exports.updateTask = async (req, res,next) => {
+exports.updateTask = async (req, res, next) => {
   const { title, description, status, dueDate } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -72,12 +81,12 @@ exports.updateTask = async (req, res,next) => {
   try {
     let task = await Task.findById(req.params.id);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({ message: "Task not found" });
     }
 
     // Ensure the task belongs to the authenticated user
     if (task.user.toString() !== req.user.id) {
-      return res.status(401).json({ message: 'User not authorized' });
+      return res.status(401).json({ message: "User not authorized" });
     }
 
     // Build the update object
@@ -94,18 +103,30 @@ exports.updateTask = async (req, res,next) => {
 
     // Check if there are any changes
     if (Object.keys(updateFields).length === 0) {
-      return res.status(200).json({ message: 'Nothing was updated' });
+      return res.status(200).json({ message: "Nothing was updated" });
     }
 
     // Update the task with the changed fields
     const updatedTask = await Task.findOneAndUpdate(
       { _id: req.params.id },
       { $set: updateFields },
-      { new: true, runValidators: true, context: 'query' }
-    ).populate('user', 'name email');
+      { new: true, runValidators: true, context: "query" },
+    ).populate("user", "name email");
+
+    // Find the user and update the task in the user's tasks array
+    const user = await User.findById(req.user.id);
+    const taskIndex = user.tasks.findIndex(
+      (task) => task.taskId.toString() === req.params.id,
+    );
+    user.tasks[taskIndex] = {
+      taskId: updatedTask._id,
+      title: updatedTask.title,
+      description: updatedTask.description,
+    };
+    await user.save();
 
     return res.status(200).json({
-      message: 'Task updated successfully!',
+      message: "Task updated successfully!",
       task: {
         taskId: updatedTask._id,
         title: updatedTask.title,
@@ -121,29 +142,35 @@ exports.updateTask = async (req, res,next) => {
     });
   } catch (err) {
     if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
-exports.deleteTask = async (req, res,next) => {
+exports.deleteTask = async (req, res, next) => {
   try {
-    
     let task = await Task.findById(req.params.id);
-    if (!task) return res.status(404).json({ message: 'Task not found' });
+    if (!task) return res.status(404).json({ message: "Task not found" });
 
     // Ensure the task belongs to the authenticated user
     if (task.user.toString() !== req.user.id)
-      return res.status(401).json({ message: 'Not authorized' });
+      return res.status(401).json({ message: "Not authorized" });
 
     await Task.findByIdAndDelete(req.params.id);
 
-    return res.status(200).json({ message: 'Task successfully removed!' });
+    // Remove the task from the user's tasks array
+    const user = await User.findById(req.user.id);
+    user.tasks = user.tasks.filter(
+      (task) => task.taskId.toString() !== req.params.id,
+    );
+    await user.save();
+
+    return res.status(200).json({ message: "Task successfully removed!" });
   } catch (err) {
     if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };

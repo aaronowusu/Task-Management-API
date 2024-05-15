@@ -37,39 +37,39 @@ The Task Management API is a RESTful API that allows users to manage their tasks
 
 1. **Clone the repository**:
 
-    ```sh
-    git clone https://github.com/aaronowusu/Task-Mangement-API.git
-    cd Task-Mangement-API
-    ```
+   ```sh
+   git clone https://github.com/aaronowusu/Task-Mangement-API.git
+   cd Task-Mangement-API
+   ```
 
 2. **Install dependencies**:
 
-    ```sh
-    npm install
-    ```
+   ```sh
+   npm install
+   ```
 
 3. **Create a `.env` file** in the root directory based on the `.env.example` file provided:
 
-    ```sh
-    cp .env.example .env
-    ```
+   ```sh
+   cp .env.example .env
+   ```
 
 4. **Update the `.env` file** with your environment variables:
 
-    ```plaintext
-    # .env
-    MONGODB_URI=your_mongodb_uri
-    JWT_SECRET=your_jwt_secret
-    PORT=3000
-    ```
+   ```plaintext
+   # .env
+   MONGODB_URI=your_mongodb_uri
+   JWT_SECRET=your_jwt_secret
+   PORT=3000
+   ```
 
 5. **Start the server**:
 
-    ```sh
-    nodemon server.js
-    ```
+   ```sh
+   nodemon app.js or npm start
+   ```
 
-    The server should now be running on `http://localhost:3000`.
+   The server should now be running on `http://localhost:3000`.
 
 ## Usage 📚
 
@@ -85,7 +85,6 @@ Content-Type: application/json
   "password": "password123"
 }
 ```
-
 
 ### Login a User
 
@@ -169,7 +168,6 @@ Make sure to configure the following environment variables in your `.env` file:
 - `JWT_SECRET`: Your secret key for JWT authentication
 - `PORT`: The port on which the server will run (default is 3000)
 
-
 ## API Endpoints 🔗
 
 - `POST /auth/register`: Register a new user
@@ -182,3 +180,7 @@ Make sure to configure the following environment variables in your `.env` file:
 ## Postman Collection 📬
 
 A Postman collection is available to help you test the API endpoints. You can import the collection into Postman and use it to quickly test the API.
+
+## Swagger Documentation 📖
+
+The API documentation is available in Swagger format. You can access the documentation by running the server and visiting `http://localhost:3000/api-docs`.

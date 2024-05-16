@@ -7,7 +7,6 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Swagger
 const options = {
@@ -45,7 +44,9 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 // Connect to MongoDB
-connectDB();
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 // Init Middleware
 app.use(express.json());
@@ -79,7 +80,5 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Not found" });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// Export the app
+module.exports = app;

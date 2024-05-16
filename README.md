@@ -11,14 +11,14 @@ This API allows users to manage their tasks efficiently. Users can create, updat
 - [Environment Variables](#environment-variables)
 - [API Endpoints](#api-endpoints)
 - [Postman Collection](#postman-collection)
-- [Contributing](#contributing)
-- [License](#license)
+- [Swagger Documentation](#swagger-documentation)
+- [Unit Testing](#unit-testing)
 
-## Project Description 
+## Project Description
 
 The Task Management API is a RESTful API that allows users to manage their tasks. Each user can perform CRUD (Create, Read, Update, Delete) operations on their tasks. The API is secured using JWT (JSON Web Tokens) for authentication.
 
-## Features 
+## Features
 
 - User authentication (register and login)
 - Create, update, fetch, and delete tasks
@@ -26,7 +26,7 @@ The Task Management API is a RESTful API that allows users to manage their tasks
 - Input validation using express-validator
 - Error handling middleware
 
-## Installation 
+## Installation
 
 ### Prerequisites
 
@@ -66,12 +66,12 @@ The Task Management API is a RESTful API that allows users to manage their tasks
 5. **Start the server**:
 
    ```sh
-   nodemon app.js or npm start
+   nodemon server.js or npm start
    ```
 
    The server should now be running on `http://localhost:3000`.
 
-## Usage 
+## Usage
 
 ### Register a User
 
@@ -165,7 +165,6 @@ Make sure to configure the following environment variables in your `.env` file:
 - `JWT_SECRET`: Your secret key for JWT authentication
 - `PORT`: The port on which the server will run (default is 3000)
 
-
 ## API Endpoints
 
 - `POST /auth/register`: Register a new user
@@ -175,10 +174,44 @@ Make sure to configure the following environment variables in your `.env` file:
 - `PATCH /task/:id`: Update a task
 - `DELETE /task/:id`: Delete a task
 
-## Postman Collection 📬
+## Postman Collection
 
 A Postman collection is available to help you test the API endpoints. You can import the collection into Postman and use it to quickly test the API.
 
-## Swagger Documentation 📖
+## Swagger Documentation
 
 The API documentation is available in Swagger format. You can access the documentation by running the server and visiting `http://localhost:3000/api-docs`.
+
+## Unit Testing
+
+For this project, I used `mongodb-memory-server` to create a mock MongoDB instance for testing. This approach ensures that tests do not interact with the real database, providing a clean and isolated environment for each test run.
+
+### Benefits of Using `mongodb-memory-server`
+
+- **Isolation**: Each test run uses a separate in-memory database instance, preventing tests from interfering with each other.
+- **Clean State**: The database is cleared before each test, ensuring tests start with a clean state.
+- **No External Dependencies**: Tests do not depend on an external MongoDB server, making the test suite more portable and easier to set up.
+
+### Drawbacks
+
+- **Performance**: Using `mongodb-memory-server` can be slower than using a dedicated test database, especially for larger test suites.
+
+### Running Unit Tests
+
+I have written unit tests for both controllers and models to ensure they function correctly.
+
+#### Running Controller Tests
+
+To run the controller tests, use the following command:
+
+```sh
+npm run test:controllers
+```
+
+#### Running Model Tests
+
+To run the model tests, use the following command:
+
+```sh
+npm run test:models
+```

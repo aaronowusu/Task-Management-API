@@ -9,6 +9,13 @@ exports.createTask = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "No user associated with this task" });
+    }
+
     const newTask = new Task({
       title,
       description,
@@ -19,7 +26,6 @@ exports.createTask = async (req, res, next) => {
     await newTask.save();
 
     // Add the task to the user's tasks array
-    const user = await User.findById(req.user.id);
     user.tasks.push({
       taskId: newTask._id,
       title: newTask.title,
